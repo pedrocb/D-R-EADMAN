@@ -2,11 +2,11 @@
 	
 	public class LevelManager {
 		var game:Game;
-		var currentLevel:level;
-		public function LevelManager(Game game) {
+		var currentLevel:Level;
+		public function LevelManager(game:Game) {
 			this.game = game;
 		}
-		public function loadLevel(Level level){
+		public function loadLevel(level:Level){
 			if(currentLevel)currentLevel.dispose();
 			level.load();
 			currentLevel = level;
