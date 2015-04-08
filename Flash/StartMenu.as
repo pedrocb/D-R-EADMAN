@@ -8,13 +8,14 @@
 			var background = new Background4();		
 			var button = new Button1;
 			game.addChild(background);
-			button.x = 214;
-			button.y = 109;
+			button.x = 567;
+			button.y = 513;
+			button.alpha = 0;
 			button.addEventListener(MouseEvent.CLICK, buttonpressed);
 			game.addChild(button);
 		}
 		public function buttonpressed(e: MouseEvent){
-			game.levelmanager.loadLevel(new CreditsMenu(game));
+			game.levelmanager.loadLevel(new Level1(game));
 		}
 
 	}
