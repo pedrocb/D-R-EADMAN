@@ -4,7 +4,7 @@
 
 		public function Level1(game:Game) {
 			super(game);
-			player = new Player(50,50);
+			player = new Player(50,50,game);
 			world = new World(new Background1);
 		}
 		override public function load(){

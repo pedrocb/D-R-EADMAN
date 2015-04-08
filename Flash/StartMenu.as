@@ -1,23 +1,38 @@
-﻿package  {
+﻿package 
+{
 	import flash.events.MouseEvent;
-	public class StartMenu extends Level{
-		public function StartMenu(game:Game) {
+	public class StartMenu extends Level
+	{
+		import flash.system.fscommand;
+		public function StartMenu(game:Game)
+		{
 			super(game);
 		}
-		override public function load(){
-			var background = new Background4();		
-			var button = new Button1;
+		override public function load()
+		{
+			var background = new Background4();
+			var creditsbutton = new Button1  ;
 			game.addChild(background);
-			button.x = 567;
-			button.y = 513;
-			button.alpha = 0;
-			button.addEventListener(MouseEvent.CLICK, buttonpressed);
-			game.addChild(button);
+			creditsbutton.x = 567;
+			creditsbutton.y = 513;
+			creditsbutton.alpha = 0;
+			creditsbutton.addEventListener(MouseEvent.CLICK, buttonpressed);
+			var exitbutton = new Button1;
+			exitbutton.x = 586;
+			exitbutton.y = 650;
+			exitbutton.width = 191;
+			exitbutton.height = 63;
+			exitbutton.alpha = 0;
+			exitbutton.addEventListener(MouseEvent.CLICK, quit);
+			game.addChild(creditsbutton);
+			game.addChild(exitbutton);
 		}
-		public function buttonpressed(e: MouseEvent){
-			game.levelmanager.loadLevel(new Level1(game));
+		public function buttonpressed(e: MouseEvent)
+		{
+			game.levelmanager.loadLevel(new CreditsMenu(game));
 		}
-
+		public function quit(e:MouseEvent){
+			fscommand("quit");
+		}
 	}
-	
 }
