@@ -11,25 +11,23 @@
 		override public function load()
 		{
 			var background = new Background4();
-			var creditsbutton = new Button1  ;
-			game.addChild(background);
-			creditsbutton.x = 567;
-			creditsbutton.y = 513;
-			creditsbutton.alpha = 0;
-			creditsbutton.addEventListener(MouseEvent.CLICK, buttonpressed);
-			var exitbutton = new Button1;
-			exitbutton.x = 586;
-			exitbutton.y = 650;
-			exitbutton.width = 191;
-			exitbutton.height = 63;
-			exitbutton.alpha = 0;
+			var creditsbutton = new Button1(567,513,310,63);
+			var exitbutton = new Button1(586,650,191,63);
+			var newgamebutton = new Button1(585,269,220,63);
+			addChild(background);
+			creditsbutton.addEventListener(MouseEvent.CLICK, creditsbuttonpressed);
 			exitbutton.addEventListener(MouseEvent.CLICK, quit);
-			game.addChild(creditsbutton);
-			game.addChild(exitbutton);
+			newgamebutton.addEventListener(MouseEvent.CLICK, startgame);
+			addChild(newgamebutton);
+			addChild(creditsbutton);
+			addChild(exitbutton);
 		}
-		public function buttonpressed(e: MouseEvent)
+		public function creditsbuttonpressed(e: MouseEvent)
 		{
 			game.levelmanager.loadLevel(new CreditsMenu(game));
+		}
+		public function startgame(e:MouseEvent){
+			game.levelmanager.loadLevel(new Level1(game));
 		}
 		public function quit(e:MouseEvent){
 			fscommand("quit");

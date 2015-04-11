@@ -8,12 +8,7 @@
 		override public function load(){
 			var background = new Background5;
 			game.addChild(background);
-			var quitbutton = new Button1;
-			quitbutton.x = 1101;
-			quitbutton.y = 644;
-			quitbutton.width = 177;
-			quitbutton.height = 80;
-			quitbutton.alpha = 0;
+			var quitbutton = new Button1(1101,644,177,80);
 			game.addChild(quitbutton);
 			quitbutton.addEventListener(MouseEvent.CLICK, buttonpressed);
 		}

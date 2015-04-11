@@ -9,6 +9,7 @@
 		public function loadLevel(level:Level){
 			if(currentLevel)currentLevel.dispose();
 			level.load();
+			game.addChild(level)
 			currentLevel = level;
 		}
 	}

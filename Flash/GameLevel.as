@@ -7,7 +7,6 @@
 			super(game);
 		}
 		override public function load(){
-			
 		}
 	}
 	
