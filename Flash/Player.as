@@ -40,7 +40,7 @@
 		{
 			if (rightkey)
 			{
-				if (x < 4*Game.SCREEN_WIDTH / 5)
+				if (x < Game.SCREEN_WIDTH / 2)
 				{
 					x = x + speed;
 				}

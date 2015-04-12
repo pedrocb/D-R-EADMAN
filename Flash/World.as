@@ -5,12 +5,12 @@
 	public class World extends MovieClip{
 		var xoffset:int;
 		var yoffset:int;
-		var background:MovieClip;
+		var background:Array;
 		var WIDTH:int;
 		var HEIGHT:int;
 		var enemies:Array;
 		var tiles:Array;
-		public function World(back:MovieClip,width:int) {
+		public function World(back:Array,width:int) {
 			this.background = back;
 			this.WIDTH = width;
 			xoffset = 0;
@@ -19,9 +19,8 @@
 		}
 		
 		public function load(){
-			var backgroundtype:Class = background.constructor;
-			for(var i=0;i<6;i++){
-				var back:MovieClip = new backgroundtype;
+			for(var i=0;i<background.length;i++){
+				var back:MovieClip = new background[i];
 				back.x = i*Game.SCREEN_WIDTH;
 				back.y = 0;
 				addChild(back);
