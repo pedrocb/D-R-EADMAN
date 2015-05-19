@@ -5,14 +5,26 @@
 			super(game);
 			this.WIDTH = 6*Game.SCREEN_WIDTH;
 			Backgrounds = new Array;
-			for(var i=2;i<WIDTH/Game.SCREEN_WIDTH;i++){
-				trace(i);
-				Backgrounds[i] = (new Background1).constructor;
+			for(var i=0;i<WIDTH/Game.SCREEN_WIDTH;i++){
+				Backgrounds[i] = new Background1;
 			}
-			Backgrounds[0] = (new Background2).constructor;
-			Backgrounds[1] = (new Background3).constructor;
 			world = new World(Backgrounds,WIDTH);
-			player = new Player(50,50,game,world);
+			world.tiles = [
+					 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+					 [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+					 [1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
+					 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+					];
+			world.load();
+			player = new Player(400,550,game,world);
 		}
 		override public function load(){
 			game.addChild(world);
