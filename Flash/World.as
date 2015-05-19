@@ -16,6 +16,7 @@
 		public function World(back:Array,width:int) {
 			this.background = back;
 			this.WIDTH = width;
+			this.HEIGHT = Game.SCREEN_HEIGHT;
 			xoffset = 0;
 			yoffset = 0;
 		}
@@ -27,26 +28,18 @@
 				back.y = 0;
 				addChild(back);
 			}
+			TILE_WIDTH = 64;//(WIDTH)/(tiles[0].length);
+			TILE_HEIGHT = 64;//HEIGHT/tiles.length;
 			for(var y=0;y<tiles.length;y++){
 				for(var x=0;x<tiles[0].length;x++){
 					var tile;
 					if(tiles[y][x] == 1){
-						tile = new Tile;
-						TILE_WIDTH = Game.SCREEN_WIDTH/(tiles[0].length);
+						tile = new Chao;
 						tile.width = TILE_WIDTH;
-						TILE_HEIGHT = Game.SCREEN_HEIGHT/tiles.length;
 						tile.height = TILE_HEIGHT;
 						tile.x = x*tile.width;
 						tile.y = y*tile.height;
 						addChild(tile);
-					}
-					else{
-						tile = new Tile2;
-						tile.width = Game.SCREEN_WIDTH/(tiles[0].length);
-						tile.height = Game.SCREEN_HEIGHT/tiles.length;
-						tile.x = x*tile.width;
-						tile.y = y*tile.height;
-						addChild(tile);					
 					}
 				}
 			}

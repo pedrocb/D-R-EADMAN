@@ -13,6 +13,10 @@
 		var speed = 5;
 		var game:Game;
 		var world:World;
+		var level:GameLevel;
+		
+		var xpos;
+		var ypos;
 
 		var jumpspeed = 15;
 
@@ -20,7 +24,8 @@
 		var vX:int;
 
 		var dead:Boolean;
-
+		var deadbar:int;
+		
 		var jumping = false;
 
 		var canmoveright = true;
@@ -38,18 +43,20 @@
 		var leftkey = false;
 		var rightkey = false;
 
-		public function Player(x:int,y:int,game:Game,world:World)
+		public function Player(x:int,y:int,game:Game,world:World,level:GameLevel)
 		{
 			gotoAndStop(1);
-			this.x = x;
-			this.y = y;
+			this.x = xpos = x;
+			this.y = ypos = y;
 			this.game = game;
 			this.world = world;
-			var rectangle:Shape = new Shape  ;
+			this.level = level;
+			this.deadbar = 0;
+			/*var rectangle:Shape = new Shape  ;
 			rectangle.graphics.beginFill(0x00FFFF);
 			rectangle.graphics.drawRect(-this.width/2,-this.height,this.width,this.height);
 			rectangle.graphics.endFill();
-			addChild(rectangle);
+			addChild(rectangle);*/
 			load();
 
 		}
@@ -64,8 +71,11 @@
 		
 		public function update(e:Event)
 		{
-			if(!canmoveright){
-				trace("right");
+			if(hitTestObject(level.fantasma)){
+				if(!dead){
+					dead = true;
+					gotoAndStop(2);
+				}
 			}
 			if (rightkey)
 			{
@@ -91,53 +101,10 @@
 			if(vY<0){
 				vY++;
 			}
-			checkCollisions();	
-			/*if (canmovedown)
-			{
-				if (! jumping)
-				{
-					vY = jumpspeed;
-				}
-			}
-			else
-			{
-				if (upkey)
-				{
-					jumping = true;
-					vY =  -  jumpspeed;
-				}
-			}
-			if (vY > 0)
-			{
-				if (!canmovedown)
-				{
-					vY = 0;
-				}
-			}
-			else if (vY<0)
-			{
-				vY++;
-			}
-			else
-			{
-				jumping = false;
-			}
-			if (vX >0)
-			{
-				if (! canmoveright)
-				{
-					vX = 0;
-				}
-			}
-			else if (vX <0)
-			{
-				if (! canmoveleft)
-				{
-					vX = 0;
-				}
-			}*/
-			x +=  vX;
-			y +=  vY;
+			checkCollisions();
+			xpos +=  vX;
+			ypos +=  vY;
+			
 		}
 
 		public function keydown(e:KeyboardEvent)
@@ -200,10 +167,10 @@
 			var foundup = false;
 			var founddown = false;
 
-			var leftTileX = (int)((this.x+vX-width/2 )/world.TILE_WIDTH);
-			var rightTileX = (int)((1+this.x+ vX+width/2)/world.TILE_WIDTH);
-			var upTileY = (int)((this.y-height)/world.TILE_HEIGHT);
-			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
+			var leftTileX = (int)((xpos+vX-width/2 )/world.TILE_WIDTH);
+			var rightTileX = (int)((1+xpos+ vX+width/2)/world.TILE_WIDTH);
+			var upTileY = (int)((ypos-height)/world.TILE_HEIGHT);
+			var downTileY = (int)((1+ypos)/world.TILE_HEIGHT);
 			for (var y=upTileY; y<=downTileY; y++)
 			{
 				if (! foundleft)
@@ -211,7 +178,6 @@
 					if (world.tiles[y][leftTileX] != 0)
 					{
 						foundleft = true;
-						trace("Yo",leftTileX);
 					}
 				}
 				if (! foundright)
@@ -222,10 +188,10 @@
 					}
 				}
 			}
-			leftTileX = (int)((this.x-width/2 )/world.TILE_WIDTH);
-			rightTileX = (int)((1+this.x+width/2)/world.TILE_WIDTH);
-			upTileY = (int)((this.y+vY-height)/world.TILE_HEIGHT);
-			downTileY = (int)((1+this.y+vY)/world.TILE_HEIGHT);
+			leftTileX = (int)((xpos-width/2 )/world.TILE_WIDTH);
+			rightTileX = (int)((1+xpos+width/2)/world.TILE_WIDTH);
+			upTileY = (int)((ypos+vY-height)/world.TILE_HEIGHT);
+			downTileY = (int)((1+ypos+vY)/world.TILE_HEIGHT);
 			for (var x=leftTileX; x<=rightTileX; x++)
 			{
 				if (! foundup)
@@ -245,7 +211,9 @@
 			}
 			if(foundleft){
 				if(canmoveleft && vX <0){
-					this.x = 2+this.x - ((this.x-this.width/2)%world.TILE_WIDTH);
+					if(((xpos-this.width/2)%world.TILE_WIDTH) < world.TILE_WIDTH/2){
+						xpos = 2+xpos - ((xpos-this.width/2)%world.TILE_WIDTH);
+					}
 					canmoveleft = false;
 				}
 				vX = 0;
@@ -257,7 +225,9 @@
 			}
 			if(foundright){
 				if(canmoveright && vX>0){
-					this.x = -2+ this.x + (world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH));
+					if((world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH)) < world.TILE_WIDTH/2){
+						xpos = -2+ xpos + (world.TILE_WIDTH - ((xpos+this.width/2)%world.TILE_WIDTH));
+					}
 					canmoveright = false;
 				}
 				vX = 0;
@@ -269,7 +239,10 @@
 			}
 			if(founddown){
 				if(canmovedown && vY >0){
-					this.y = -2+this.y + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
+					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <this.height/3){
+						trace(world.TILE_HEIGHT - this.y%world.TILE_HEIGHT);
+						ypos = -2+ypos + (world.TILE_HEIGHT - ypos%world.TILE_HEIGHT); 
+					}
 					canmovedown = false;
 				}
 				vY = 0;
@@ -281,7 +254,10 @@
 			}
 			if(foundup){
 				if(canmoveup && vY <0){
-					this.y = 2 +this.y + (this.y-this.height)%world.TILE_HEIGHT;
+					if((ypos-this.height)%world.TILE_HEIGHT <this.height/3){
+						ypos = 2 +ypos + (this.y-this.height)%world.TILE_HEIGHT;
+					}
+					
 					canmoveup = false;
 				}
 				vY = 0;
@@ -291,23 +267,6 @@
 					canmoveup = true;
 				}
 			}
-/*
-			if(!canmoveup){
-				if(foundup){
-					this.y += ((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) -1);
-				}
-				else{
-					canmoveup =true;
-				}
-			}
-			if(!canmovedown){
-				if(founddown){
-					this.y -= ((this.y%world.TILE_HEIGHT) + 1);
-				}
-				else{
-					canmovedown = true;
-				}
-			}*/
 		}
 	}
 }
