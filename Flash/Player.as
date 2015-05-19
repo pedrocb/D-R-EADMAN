@@ -10,11 +10,11 @@
 
 	public class Player extends MovieClip
 	{
-		var speed = 1;
+		var speed = 5;
 		var game:Game;
 		var world:World;
 
-		var jumpspeed = 10;
+		var jumpspeed = 15;
 
 		var vY:int;
 		var vX:int;
@@ -69,26 +69,27 @@
 			}
 			if (rightkey)
 			{
-				if(canmoveright)
-					vX = speed;
+				vX = speed;
 			}
 			if (leftkey)
 			{
-				if(canmoveleft)
-					vX =  -speed;
+				vX =  -speed;
 			}
 			if (rightkey == leftkey)
 			{
 				vX = 0;
 			}
-			if(downkey){
+			if(canmovedown){
+				if(vY>=0)
 				vY = speed;
 			}
-			if(upkey){
-				vY = -speed;
+			else{
+				if(upkey){
+					vY = -jumpspeed;
+				}
 			}
-			if(upkey == downkey){
-				vY = 0;
+			if(vY<0){
+				vY++;
 			}
 			checkCollisions();	
 			/*if (canmovedown)
@@ -199,9 +200,9 @@
 			var foundup = false;
 			var founddown = false;
 
-			var leftTileX = (int)((this.x -width/2)/world.TILE_WIDTH);
-			var rightTileX = (int)((1+this.x+width/2)/world.TILE_WIDTH);
-			var upTileY = (int)((this.y - height)/world.TILE_HEIGHT);
+			var leftTileX = (int)((this.x+vX-width/2 )/world.TILE_WIDTH);
+			var rightTileX = (int)((1+this.x+ vX+width/2)/world.TILE_WIDTH);
+			var upTileY = (int)((this.y-height)/world.TILE_HEIGHT);
 			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
 			for (var y=upTileY; y<=downTileY; y++)
 			{
@@ -210,7 +211,7 @@
 					if (world.tiles[y][leftTileX] != 0)
 					{
 						foundleft = true;
-						leftcollision = true;
+						trace("Yo",leftTileX);
 					}
 				}
 				if (! foundright)
@@ -218,10 +219,13 @@
 					if (world.tiles[y][rightTileX] != 0)
 					{
 						foundright = true;
-						rightcollision = true;
 					}
 				}
 			}
+			leftTileX = (int)((this.x-width/2 )/world.TILE_WIDTH);
+			rightTileX = (int)((1+this.x+width/2)/world.TILE_WIDTH);
+			upTileY = (int)((this.y+vY-height)/world.TILE_HEIGHT);
+			downTileY = (int)((1+this.y+vY)/world.TILE_HEIGHT);
 			for (var x=leftTileX; x<=rightTileX; x++)
 			{
 				if (! foundup)
@@ -229,7 +233,6 @@
 					if (world.tiles[upTileY][x] != 0)
 					{
 						foundup = true;
-						upcollision = true;
 					}
 				}
 				if (! founddown)
@@ -237,17 +240,15 @@
 					if (world.tiles[downTileY][x] != 0)
 					{
 						founddown = true;
-						downcollision = true;
 					}
 				}
 			}
 			if(foundleft){
-				if(canmoveleft){
-					if(vX<0){
-						this.x = (leftTileX+1)*world.TILE_WIDTH - world.TILE_WIDTH+this.width/2+3; 
-					}
+				if(canmoveleft && vX <0){
+					this.x = 2+this.x - ((this.x-this.width/2)%world.TILE_WIDTH);
+					canmoveleft = false;
 				}
-				canmoveleft = false;
+				vX = 0;
 			}
 			else{
 				if(!canmoveleft){
@@ -255,12 +256,11 @@
 				}
 			}
 			if(foundright){
-				if(canmoveright){
-					if(vX > 0){
-						this.x = (rightTileX - 1)*world.TILE_WIDTH + world.TILE_WIDTH-this.width/2-3; 
-					}
+				if(canmoveright && vX>0){
+					this.x = -2+ this.x + (world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH));
+					canmoveright = false;
 				}
-				canmoveright = false;
+				vX = 0;
 			}
 			else{
 				if(!canmoveright){
@@ -268,12 +268,11 @@
 				}
 			}
 			if(founddown){
-				if(canmovedown){
-					if(vY>0){
-						this.y = (downTileY - 1)*world.TILE_HEIGHT + world.TILE_HEIGHT-3; 
-					}
+				if(canmovedown && vY >0){
+					this.y = -2+this.y + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
+					canmovedown = false;
 				}
-				canmovedown = false;
+				vY = 0;
 			}
 			else{
 				if(!canmovedown){
@@ -281,12 +280,11 @@
 				}
 			}
 			if(foundup){
-				if(canmoveup){
-					if(vY<0){
-						this.y = (upTileY+1)*world.TILE_HEIGHT  + 3 + this.height;
-					}
+				if(canmoveup && vY <0){
+					this.y = 2 +this.y + (this.y-this.height)%world.TILE_HEIGHT;
+					canmoveup = false;
 				}
-				canmoveup = false;
+				vY = 0;
 			}
 			else{
 				if(!canmoveup){

@@ -25,10 +25,15 @@
 					];
 			world.load();
 			player = new Player(400,550,game,world);
+			fantasma = new Fantasma;
+			fantasma.x = 500;
+			fantasma.y = 400;
+			game.addChild(fantasma);
 		}
 		override public function load(){
 			game.addChild(world);
 			game.addChild(player);
+			game.addChild(fantasma);
 		}
 
 	}
