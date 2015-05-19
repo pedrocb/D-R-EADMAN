@@ -14,9 +14,6 @@
 		var game:Game;
 		var world:World;
 		var level:GameLevel;
-		
-		var xpos;
-		var ypos;
 
 		var jumpspeed = 15;
 
@@ -46,8 +43,8 @@
 		public function Player(x:int,y:int,game:Game,world:World,level:GameLevel)
 		{
 			gotoAndStop(1);
-			this.x = xpos = x;
-			this.y = ypos = y;
+			this.x = x;
+			this.y = y;
 			this.game = game;
 			this.world = world;
 			this.level = level;
@@ -102,8 +99,8 @@
 				vY++;
 			}
 			checkCollisions();
-			xpos +=  vX;
-			ypos +=  vY;
+			this.x += vX;
+			this.y+=vY;
 			
 		}
 
@@ -167,10 +164,10 @@
 			var foundup = false;
 			var founddown = false;
 
-			var leftTileX = (int)((xpos+vX-width/2 )/world.TILE_WIDTH);
-			var rightTileX = (int)((1+xpos+ vX+width/2)/world.TILE_WIDTH);
-			var upTileY = (int)((ypos-height)/world.TILE_HEIGHT);
-			var downTileY = (int)((1+ypos)/world.TILE_HEIGHT);
+			var leftTileX = (int)((this.x+vX-width/2 )/world.TILE_WIDTH);
+			var rightTileX = (int)((1+this.x+ vX+width/2)/world.TILE_WIDTH);
+			var upTileY = (int)((this.y-height)/world.TILE_HEIGHT);
+			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
 			for (var y=upTileY; y<=downTileY; y++)
 			{
 				if (! foundleft)
@@ -188,10 +185,10 @@
 					}
 				}
 			}
-			leftTileX = (int)((xpos-width/2 )/world.TILE_WIDTH);
-			rightTileX = (int)((1+xpos+width/2)/world.TILE_WIDTH);
-			upTileY = (int)((ypos+vY-height)/world.TILE_HEIGHT);
-			downTileY = (int)((1+ypos+vY)/world.TILE_HEIGHT);
+			leftTileX = (int)((this.x-width/2 )/world.TILE_WIDTH);
+			rightTileX = (int)((1+this.x+width/2)/world.TILE_WIDTH);
+			upTileY = (int)((this.y+vY-height)/world.TILE_HEIGHT);
+			downTileY = (int)((1+this.y+vY)/world.TILE_HEIGHT);
 			for (var x=leftTileX; x<=rightTileX; x++)
 			{
 				if (! foundup)
@@ -211,8 +208,8 @@
 			}
 			if(foundleft){
 				if(canmoveleft && vX <0){
-					if(((xpos-this.width/2)%world.TILE_WIDTH) < world.TILE_WIDTH/2){
-						xpos = 2+xpos - ((xpos-this.width/2)%world.TILE_WIDTH);
+					if(((this.x-this.width/2)%world.TILE_WIDTH) < world.TILE_WIDTH/2){
+						this.x = 2+this.x - ((this.x-this.width/2)%world.TILE_WIDTH);
 					}
 					canmoveleft = false;
 				}
@@ -226,7 +223,7 @@
 			if(foundright){
 				if(canmoveright && vX>0){
 					if((world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH)) < world.TILE_WIDTH/2){
-						xpos = -2+ xpos + (world.TILE_WIDTH - ((xpos+this.width/2)%world.TILE_WIDTH));
+						this.x = -2+ this.x + (world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH));
 					}
 					canmoveright = false;
 				}
@@ -241,7 +238,8 @@
 				if(canmovedown && vY >0){
 					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <this.height/3){
 						trace(world.TILE_HEIGHT - this.y%world.TILE_HEIGHT);
-						ypos = -2+ypos + (world.TILE_HEIGHT - ypos%world.TILE_HEIGHT); 
+						this.y = -2+this.y + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
+						
 					}
 					canmovedown = false;
 				}
@@ -254,8 +252,8 @@
 			}
 			if(foundup){
 				if(canmoveup && vY <0){
-					if((ypos-this.height)%world.TILE_HEIGHT <this.height/3){
-						ypos = 2 +ypos + (this.y-this.height)%world.TILE_HEIGHT;
+					if((this.y-this.height)%world.TILE_HEIGHT <this.height/3){
+						this.y = 2 +this.y + (this.y-this.height)%world.TILE_HEIGHT;
 					}
 					
 					canmoveup = false;
