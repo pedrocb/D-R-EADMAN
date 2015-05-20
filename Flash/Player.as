@@ -17,8 +17,8 @@
 
 		var jumpspeed = 15;
 
-		var vY:int;
-		var vX:int;
+		var vY:Number;
+		var vX:Number;
 
 		var dead:Boolean;
 		var deadbar:int;
@@ -98,9 +98,31 @@
 			if(vY<0){
 				vY++;
 			}
+			if(vX <0){
+				rotationY = 180;
+			}
+			else if(vX >0){
+				rotationY = 0;
+			}
 			checkCollisions();
-			this.x += vX;
+			if(this.x > 3*Game.SCREEN_WIDTH/4 && vX > 0){
+				world.x-= vX;
+				world.xoffset +=vX;
+			}
+			else if(this.x < Game.SCREEN_WIDTH/4 && vX <0){
+				if(world.xoffset>0){
+					world.xoffset+= vX;
+					world.x-=vX;
+				}
+				else{
+					this.x+=vX;
+				}
+			}
+			else{
+				this.x+= vX
+			}
 			this.y+=vY;
+
 			
 		}
 
@@ -164,8 +186,8 @@
 			var foundup = false;
 			var founddown = false;
 
-			var leftTileX = (int)((this.x+vX-width/2 )/world.TILE_WIDTH);
-			var rightTileX = (int)((1+this.x+ vX+width/2)/world.TILE_WIDTH);
+			var leftTileX = (int)((this.x+world.xoffset+vX-width/2 )/world.TILE_WIDTH);
+			var rightTileX = (int)((1+this.x+world.xoffset+ vX+width/2)/world.TILE_WIDTH);
 			var upTileY = (int)((this.y-height)/world.TILE_HEIGHT);
 			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
 			for (var y=upTileY; y<=downTileY; y++)
@@ -185,8 +207,8 @@
 					}
 				}
 			}
-			leftTileX = (int)((this.x-width/2 )/world.TILE_WIDTH);
-			rightTileX = (int)((1+this.x+width/2)/world.TILE_WIDTH);
+			leftTileX = (int)((this.x+world.xoffset-width/2 )/world.TILE_WIDTH);
+			rightTileX = (int)((1+this.x+world.xoffset+width/2)/world.TILE_WIDTH);
 			upTileY = (int)((this.y+vY-height)/world.TILE_HEIGHT);
 			downTileY = (int)((1+this.y+vY)/world.TILE_HEIGHT);
 			for (var x=leftTileX; x<=rightTileX; x++)
@@ -208,12 +230,14 @@
 			}
 			if(foundleft){
 				if(canmoveleft && vX <0){
-					if(((this.x-this.width/2)%world.TILE_WIDTH) < world.TILE_WIDTH/2){
-						this.x = 2+this.x - ((this.x-this.width/2)%world.TILE_WIDTH);
+					if(((this.x+world.xoffset-this.width/2)%world.TILE_WIDTH) < world.TILE_WIDTH/2){
+						vX = 2- ((this.x+world.xoffset-this.width/2)%world.TILE_WIDTH); 
 					}
 					canmoveleft = false;
 				}
-				vX = 0;
+				else{
+					vX = 0;
+				}
 			}
 			else{
 				if(!canmoveleft){
@@ -222,12 +246,14 @@
 			}
 			if(foundright){
 				if(canmoveright && vX>0){
-					if((world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH)) < world.TILE_WIDTH/2){
-						this.x = -2+ this.x + (world.TILE_WIDTH - ((this.x+this.width/2)%world.TILE_WIDTH));
+					if((world.TILE_WIDTH - ((this.x+world.xoffset+this.width/2)%world.TILE_WIDTH)) < world.TILE_WIDTH/2){
+						vX = -2+(world.TILE_WIDTH - ((this.x+world.xoffset+this.width/2)%world.TILE_WIDTH));
 					}
 					canmoveright = false;
 				}
-				vX = 0;
+				else{
+					vX = 0;				
+				}
 			}
 			else{
 				if(!canmoveright){
@@ -237,13 +263,13 @@
 			if(founddown){
 				if(canmovedown && vY >0){
 					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <this.height/3){
-						trace(world.TILE_HEIGHT - this.y%world.TILE_HEIGHT);
-						this.y = -2+this.y + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
-						
+						vY = -2 + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
 					}
 					canmovedown = false;
 				}
-				vY = 0;
+				else{
+					vY = 0;	
+				}
 			}
 			else{
 				if(!canmovedown){
@@ -253,12 +279,13 @@
 			if(foundup){
 				if(canmoveup && vY <0){
 					if((this.y-this.height)%world.TILE_HEIGHT <this.height/3){
-						this.y = 2 +this.y + (this.y-this.height)%world.TILE_HEIGHT;
+						vY = 2 + (this.y-this.height)%world.TILE_HEIGHT;
 					}
-					
 					canmoveup = false;
 				}
-				vY = 0;
+				else{
+					vY = 0;				
+				}
 			}
 			else{
 				if(!canmoveup){

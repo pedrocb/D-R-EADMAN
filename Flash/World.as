@@ -4,8 +4,8 @@
 	import fl.motion.Color;
 	
 	public class World extends MovieClip{
-		var xoffset:int;
-		var yoffset:int;
+		var xoffset:Number;
+		var yoffset:Number;
 		var background:Array;
 		var WIDTH:int;
 		var HEIGHT:int;
@@ -13,12 +13,13 @@
 		var tiles:Array;
 		var TILE_WIDTH;
 		var TILE_HEIGHT;
-		public function World(back:Array,width:int) {
+		public function World(back:Array) {
 			this.background = back;
-			this.WIDTH = width;
 			this.HEIGHT = Game.SCREEN_HEIGHT;
 			xoffset = 0;
 			yoffset = 0;
+			TILE_WIDTH = 64;
+			TILE_HEIGHT = 64;
 		}
 		
 		public function load(){
@@ -28,8 +29,6 @@
 				back.y = 0;
 				addChild(back);
 			}
-			TILE_WIDTH = 64;//(WIDTH)/(tiles[0].length);
-			TILE_HEIGHT = 64;//HEIGHT/tiles.length;
 			for(var y=0;y<tiles.length;y++){
 				for(var x=0;x<tiles[0].length;x++){
 					var tile;
