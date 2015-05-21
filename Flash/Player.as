@@ -15,10 +15,12 @@
 		var world:World;
 		var level:GameLevel;
 
-		var jumpspeed = 15;
+		var jumpspeed = 16;
 
 		var vY:Number;
 		var vX:Number;
+		
+		var gravity = 1;
 
 		var dead:Boolean;
 		var deadbar:int;
@@ -63,12 +65,8 @@
 		
 		public function update(e:Event)
 		{
-			if(hitTestObject(level.fantasma)){
-				if(!dead){
-					dead = true;
-					gotoAndStop(2);
-				}
-			}
+			stage.focus = stage;
+			
 			if (rightkey)
 			{
 				vX = speed;
@@ -81,18 +79,14 @@
 			{
 				vX = 0;
 			}
-			if(canmovedown){
+			/*if(canmovedown){
 				if(vY>=0)
 				vY = speed;
-			}
-			else{
-				if(upkey){
+			}*/
+			if(upkey && !canmovedown){
 					vY = -jumpspeed;
-				}
 			}
-			if(vY<0){
-				vY++;
-			}
+			vY+=gravity;
 			if(vX <0){
 				rotationY = 180;
 			}
@@ -244,6 +238,9 @@
 					if((world.TILE_WIDTH - ((this.x+world.xoffset+this.width/2)%world.TILE_WIDTH)) < world.TILE_WIDTH/2){
 						vX = -2+(world.TILE_WIDTH - ((this.x+world.xoffset+this.width/2)%world.TILE_WIDTH));
 					}
+					else{
+						vX = (this.x+world.xoffset+this.width/2)%world.TILE_WIDTH;
+					}
 					canmoveright = false;
 				}
 				else{
@@ -257,8 +254,11 @@
 			}
 			if(founddown){
 				if(canmovedown && vY >0){
-					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <this.height/3){
+					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <20){
 						vY = -2 + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
+					}
+					else{
+						vY = -this.y%world.TILE_HEIGHT;
 					}
 					canmovedown = false;
 				}
@@ -273,8 +273,14 @@
 			}
 			if(foundup){
 				if(canmoveup && vY <0){
-					if((this.y-this.height)%world.TILE_HEIGHT <this.height/3){
+					trace((this.y-this.height)%world.TILE_HEIGHT);
+					if((this.y-this.height)%world.TILE_HEIGHT <15){
+						trace("not");
 						vY = 2 + (this.y-this.height)%world.TILE_HEIGHT;
+					}
+					else{
+						trace("yo");
+						vY = world.TILE_HEIGHT - (this.y-this.height)%world.TILE_HEIGHT;
 					}
 					canmoveup = false;
 				}

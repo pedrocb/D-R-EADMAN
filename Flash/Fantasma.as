@@ -12,7 +12,7 @@
 		var canmoveleft = true;
 		var canmoveup = true;
 		var canmovedown = true;
-		var speed = 2;
+		var speed = 1.5;
 		var gravity = 2;
 		
 		
@@ -35,7 +35,6 @@
 		public function checkfall():Boolean{
 			var direction = speed/Math.abs(speed);
 			var tile = (int)((((1+this.x)+direction*width/2))/world.TILE_WIDTH);
-			trace(tile);
 			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
 			if(world.tiles[downTileY+1][tile]==0){
 				return true;
