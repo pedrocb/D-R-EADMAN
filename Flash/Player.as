@@ -29,11 +29,6 @@
 		var canmoveleft = true;
 		var canmoveup = true;
 		var canmovedown = true;
-		
-		var upcollision = false;
-		var downcollision = false;
-		var leftcollision = false;
-		var rightcollision = false;
 
 		var upkey = false;
 		var downkey = false;

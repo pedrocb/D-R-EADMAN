@@ -25,9 +25,7 @@
 					];
 			world.load();
 			player = new Player(400,550,game,world,this);
-			fantasma = new Fantasma;
-			fantasma.x = 500;
-			fantasma.y = 400;
+			fantasma = new Fantasma(game,550,400,world,this);
 			deadBar.text = (player.deadbar).toString();
 			deadBar.x = 0;
 			deadBar.y = 0;
@@ -37,7 +35,7 @@
 		override public function load(){
 			game.addChild(world);
 			game.addChild(player);
-			game.addChild(fantasma);
+			world.addChild(fantasma);
 			game.addChild(deadBar);
 		}
 

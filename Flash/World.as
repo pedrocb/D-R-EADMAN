@@ -40,6 +40,15 @@
 						tile.y = y*tile.height;
 						addChild(tile);
 					}
+					else{
+						tile = new Tile2;
+						tile.width = TILE_WIDTH;
+						tile.height = TILE_HEIGHT;
+						tile.x = x*tile.width;
+						tile.y = y*tile.height;
+						addChild(tile);
+
+					}
 				}
 			}
 			trace(tiles[9][10]);
