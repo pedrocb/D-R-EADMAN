@@ -15,6 +15,8 @@
 		}
 		override public function load(){
 		}
+		override public function complete(){
+		}
 	}
 	
 }

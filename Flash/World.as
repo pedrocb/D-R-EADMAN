@@ -42,7 +42,7 @@
 					}
 				}
 			}
-			trace(tiles[9][10]);
+			//trace(tiles[9][10]);
 		}
 
 	}
