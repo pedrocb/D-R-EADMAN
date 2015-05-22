@@ -11,6 +11,7 @@
 	public class Player extends MovieClip
 	{
 		var speed = 5;
+		var jumpxspeed = 7;
 		var game:Game;
 		var world:World;
 		var level:GameLevel;
@@ -60,31 +61,49 @@
 			game.stage.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			game.stage.addEventListener(KeyboardEvent.KEY_UP,keyup);
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
+			
 		}
 
 		
 		public function update(e:Event)
 		{
+			if(dead){
+				if(deadbar>0){
+					deadbar--;
+					level.deadBar.width = deadbar;
+				}
+			}
 			stage.focus = stage;
-			
 			if (rightkey)
 			{
-				vX = speed;
+				if(vY!=0){
+					vX = jumpxspeed;
+				}
+				else{
+					vX = speed;					
+				}
 			}
 			if (leftkey)
 			{
-				vX =  -speed;
-			}
+				if(vY!=0){
+					vX = -jumpxspeed;
+				}
+				else{
+					vX = -speed;					
+				}			}
 			if (rightkey == leftkey)
 			{
 				vX = 0;
 			}
-			/*if(canmovedown){
-				if(vY>=0)
-				vY = speed;
-			}*/
-			if(upkey && !canmovedown){
-					vY = -jumpspeed;
+			if(upkey){
+				if(dead){
+					vY = -jumpspeed/2;
+				}
+				else{
+					if(!canmovedown){
+						vY = -jumpspeed;
+					}
+				}
 			}
 			vY+=gravity;
 			if(vX <0){
@@ -99,18 +118,36 @@
 				world.xoffset +=vX;
 			}
 			else if(this.x < Game.SCREEN_WIDTH/4 && vX <0){
-				if(world.xoffset>0){
+				if(world.xoffset + vX>0){
 					world.xoffset+= vX;
 					world.x-=vX;
 				}
 				else{
+					world.xoffset = 0;
+					world.x = 0;
 					this.x+=vX;
 				}
 			}
 			else{
-				this.x+= vX
+				this.x+= vX;
 			}
-			this.y+=vY;
+			if(this.y < Game.SCREEN_HEIGHT/4 && vY < 0){
+				if(-world.y + vY>0){
+					world.y-= vY;
+				}
+			}
+			else if(this.y > 3*Game.SCREEN_HEIGHT/4 && vY >0){
+				if(-world.y+vY<Game.SCREEN_HEIGHT){
+					world.y-=vY;
+				}
+				else{
+					world.y = -Game.SCREEN_HEIGHT - 3*world.TILE_HEIGHT/4;
+					this.y+=vY;
+				}
+			}
+			else{
+				this.y+= vY;
+			}
 
 			
 		}
@@ -133,18 +170,23 @@
 			{
 				upkey = true;
 			}
-			if (e.keyCode == Keyboard.SPACE)
+			if (e.keyCode == Keyboard.CONTROL)
 			{
 				if (dead)
 				{
 					dead = false;
+					level.grey.alpha = 0;
 					gotoAndStop(1);
 				}
 				else
 				{
 					dead = true;
+					level.grey.alpha = 0.3;
 					gotoAndStop(2);
 				}
+			}
+			if(e.keyCode == Keyboard.SPACE){
+				gotoAndStop(3);
 			}
 		}
 
@@ -176,42 +218,60 @@
 			var founddown = false;
 
 			var leftTileX = (int)((this.x+world.xoffset+vX-width/2 )/world.TILE_WIDTH);
+			if(this.x+world.xoffset+vX-width/2<0){
+				leftTileX = -1;
+			}
 			var rightTileX = (int)((1+this.x+world.xoffset+ vX+width/2)/world.TILE_WIDTH);
-			var upTileY = (int)((this.y-height)/world.TILE_HEIGHT);
-			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
+			var upTileY = (int)((this.y-world.y-height)/world.TILE_HEIGHT);
+			var downTileY = (int)((1-world.y+this.y)/world.TILE_HEIGHT);
+			trace(downTileY);
 			for (var y=upTileY; y<=downTileY; y++)
 			{
 				if (! foundleft)
 				{
-					if (world.tiles[y][leftTileX] != 0)
+					if (getTile(y,leftTileX) != 0)
 					{
 						foundleft = true;
 					}
 				}
 				if (! foundright)
 				{
-					if (world.tiles[y][rightTileX] != 0)
+					if (getTile(y,rightTileX) != 0)
 					{
 						foundright = true;
 					}
 				}
 			}
-			leftTileX = (int)((this.x+world.xoffset-width/2 )/world.TILE_WIDTH);
-			rightTileX = (int)((1+this.x+world.xoffset+width/2)/world.TILE_WIDTH);
-			upTileY = (int)((this.y+vY-height)/world.TILE_HEIGHT);
-			downTileY = (int)((1+this.y+vY)/world.TILE_HEIGHT);
+			if(!foundright){
+				rightTileX = (int)((1+this.x+vX+world.xoffset+width/2)/world.TILE_WIDTH);
+			}
+			else{
+				rightTileX = (int)((1+this.x+world.xoffset+width/2)/world.TILE_WIDTH);
+			}
+			if(!foundleft){
+				leftTileX = (int)((this.x+vX+world.xoffset-width/2 )/world.TILE_WIDTH);
+			}
+			else{
+				leftTileX = (int)((this.x+world.xoffset-width/2 )/world.TILE_WIDTH);
+			}
+			upTileY = (int)((this.y+vY-world.y-height)/world.TILE_HEIGHT);
+			if((this.y+vY-world.y-height)<0){
+				upTileY = -1;
+			}
+			downTileY = (int)((1+this.y-world.y+vY)/world.TILE_HEIGHT);
 			for (var x=leftTileX; x<=rightTileX; x++)
 			{
 				if (! foundup)
 				{
-					if (world.tiles[upTileY][x] != 0)
+					
+					if (getTile(upTileY,x) != 0)
 					{
 						foundup = true;
 					}
 				}
 				if (! founddown)
 				{
-					if (world.tiles[downTileY][x] != 0)
+					if (getTile(downTileY,x) != 0)
 					{
 						founddown = true;
 					}
@@ -254,12 +314,7 @@
 			}
 			if(founddown){
 				if(canmovedown && vY >0){
-					if((world.TILE_HEIGHT - this.y%world.TILE_HEIGHT) <20){
-						vY = -2 + (world.TILE_HEIGHT - this.y%world.TILE_HEIGHT); 
-					}
-					else{
-						vY = -this.y%world.TILE_HEIGHT;
-					}
+					vY = -2 + (world.TILE_HEIGHT - (this.y-world.y)%world.TILE_HEIGHT); 
 					canmovedown = false;
 				}
 				else{
@@ -267,21 +322,11 @@
 				}
 			}
 			else{
-				if(!canmovedown){
-					canmovedown = true;
-				}
+				canmovedown = true;
 			}
 			if(foundup){
 				if(canmoveup && vY <0){
-					trace((this.y-this.height)%world.TILE_HEIGHT);
-					if((this.y-this.height)%world.TILE_HEIGHT <15){
-						trace("not");
-						vY = 2 + (this.y-this.height)%world.TILE_HEIGHT;
-					}
-					else{
-						trace("yo");
-						vY = world.TILE_HEIGHT - (this.y-this.height)%world.TILE_HEIGHT;
-					}
+					vY = -((this.y-this.height-world.y)%world.TILE_HEIGHT) + 2;
 					canmoveup = false;
 				}
 				else{
@@ -292,6 +337,18 @@
 				if(!canmoveup){
 					canmoveup = true;
 				}
+			}
+		}
+		
+		public function getTile(y:int,x:int):int{
+			if(x<0 || x>world.tiles[0].length){
+				return 1;
+			}
+			if(y<0 || y>world.tiles.length-1){
+				return 1;
+			}
+			else{
+				return world.tiles[y][x];
 			}
 		}
 	}
