@@ -17,17 +17,17 @@
 		{
 			player = new PlayerS;
 			player.x = 300;
-			player.y = 676;
+			player.y = Game.SCREEN_HEIGHT-64/4;
 			player.gotoAndStop(3);
 			ghost = new PlayerS;
 			ghost.x = 980;
-			ghost.y = 676;
+			ghost.y = Game.SCREEN_HEIGHT-64/4;
 			ghost.rotationY = 180;
 			ghost.gotoAndStop(2);
-			var background = new Background4();
-			var creditsbutton = new Button1(567,513,310,63);
-			var exitbutton = new Button1(586,650,191,63);
-			var newgamebutton = new Button1(585,269,220,63);
+			var background = new Menu1();
+			var creditsbutton = new Button1(611,441,175,42);
+			var exitbutton = new Button1(626,486,94,39);
+			var newgamebutton = new Button1(622,310,113,39);
 			addChild(background);
 			creditsbutton.addEventListener(MouseEvent.CLICK, creditsbuttonpressed);
 			exitbutton.addEventListener(MouseEvent.CLICK, quit);
@@ -48,7 +48,6 @@
 		}
 		
 		public function update(e:Event){
-			trace(player.x+" "+((speed/Math.abs(speed)*(player.width/2-20))));
 			if((player.x-player.width/2) > Game.SCREEN_WIDTH+20){
 				ghost.x = -player.width/2;
 				player.x = Game.SCREEN_WIDTH+player.width/2;
