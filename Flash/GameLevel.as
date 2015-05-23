@@ -1,11 +1,13 @@
-﻿package  {
+﻿package 
+{
 	import flashx.textLayout.accessibility.TextAccImpl;
 	import flash.text.TextField;
 	import flash.events.Event;
 	import flash.display.MovieClip;
 	import flash.display.Shape;
-	
-	public class GameLevel extends Level{
+
+	public class GameLevel extends Level
+	{
 		var player:Player;
 		var world:World;
 		var Backgrounds:Array;
@@ -13,44 +15,64 @@
 		var potions:Array;
 		var deadBar:DeadBar;
 		var grey:Shape;
-		
-		public function GameLevel(game:Game){
+
+		public function GameLevel(game:Game)
+		{
 			grey = new Shape  ;
 			grey.graphics.beginFill(0xE0E0E0);
 			grey.graphics.drawRect(0,0,Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
 			grey.graphics.endFill();
-			grey.alpha=0;
-			enemies = new Array;
-			potions = new Array;
+			grey.alpha = 0;
+			enemies = new Array  ;
+			potions = new Array  ;
 			super(game);
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
 		}
-		override public function load(){
+		override public function load()
+		{
 		}
-		public function update(e:Event){
-			for(var i=0;i<potions.length;i++){
-				if(player.hitTestObject(potions[i])){
+		public function update(e:Event)
+		{
+			for (var i=0; i<potions.length; i++)
+			{
+				if (player.hitTestObject(potions[i]))
+				{
 					world.removeChild(potions[i]);
-					potions[i] = potions[potions.length -1];
+					potions[i] = potions[potions.length - 1];
 					potions.pop();
-					player.deadbar += 50;
+					player.deadbar +=  50;
 					deadBar.width = player.deadbar;
+					trace("teste");
 					break;
 				}
 			}
-			for each(var potion in potions){
-				
-			}
-			for each(var enemy in enemies){
-				if(player.hitTestObject(enemy)){
-					if(!player.dead){
-						player.dead = true;
-						player.gotoAndStop(2);
-						grey.alpha = 0.3;
+			for each (var enemy in enemies)
+			{
+				if (player.hitTestObject(enemy))
+				{
+					if (player.deadbar !=0)
+					{
+						if (! player.dead)
+						{
+							player.dead = true;
+							player.gotoAndStop(2);
+							grey.alpha = 0.3;
+						}
+						
+					}
+					else
+					{
+						game.levelmanager.loadLevel(new StartMenu(game));
 					}
 				}
-			}		
+			}
+		}
+		
+		override public function dispose(){
+			super.dispose();
+			game.stage.removeEventListener(Event.ENTER_FRAME,update);
+			player.dispose();
 		}
 	}
-	
+
 }

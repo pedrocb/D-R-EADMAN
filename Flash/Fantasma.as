@@ -19,11 +19,11 @@
 		var vX,vY:int;
 
 		
-		public function Fantasma(game:Game,x:int,y:int,world:World,level:GameLevel) {
+		public function Fantasma(x:int,y:int,world:World,level:GameLevel) {
 			this.x = x;
 			this.y = y;
 			this.world = world;
-			this.game = game;
+			this.game = level.game;
 			this.level = level;
 			load();
 		}
@@ -36,6 +36,9 @@
 			var direction = speed/Math.abs(speed);
 			var tile = (int)((((1+this.x)+direction*width/2))/world.TILE_WIDTH);
 			var downTileY = (int)((1+this.y)/world.TILE_HEIGHT);
+			if(downTileY>=world.tiles.length-1){
+				return false;
+			}
 			if(world.tiles[downTileY+1][tile]==0){
 				return true;
 			}
@@ -77,14 +80,14 @@
 			{
 				if (! foundleft)
 				{
-					if (world.tiles[y][leftTileX] != 0)
+					if (world.tiles[y][leftTileX] == 1)
 					{
 						foundleft = true;
 					}
 				}
 				if (! foundright)
 				{
-					if (world.tiles[y][rightTileX] != 0)
+					if (world.tiles[y][rightTileX] == 1)
 					{
 						foundright = true;
 					}
@@ -98,14 +101,14 @@
 			{
 				if (! foundup)
 				{
-					if (world.tiles[upTileY][x] != 0)
+					if (world.tiles[upTileY][x] == 1)
 					{
 						foundup = true;
 					}
 				}
 				if (! founddown)
 				{
-					if (world.tiles[downTileY][x] != 0)
+					if (world.tiles[downTileY][x] == 1)
 					{
 						founddown = true;
 					}

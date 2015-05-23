@@ -4,7 +4,6 @@
 	import fl.motion.Color;
 	
 	public class World extends MovieClip{
-		var xoffset:Number;
 		var background:Array;
 		var WIDTH:Number;
 		var HEIGHT:Number;
@@ -12,9 +11,10 @@
 		var tiles:Array;
 		var TILE_WIDTH:Number;
 		var TILE_HEIGHT:Number;
-		public function World() {
+		var level = GameLevel;
+		public function World(level:GameLevel) {
+			this.level = level;
 			this.HEIGHT = Game.SCREEN_HEIGHT;
-			xoffset = 0;
 			TILE_WIDTH = 64;
 			TILE_HEIGHT = 64;
 		}
@@ -41,6 +41,18 @@
 						tile.y = tile.height*y;						
 						addChild(tile);
 					}
+					else if(tiles[y][x] == 3){
+						tile = new Potion;
+						tile.x = (x*TILE_WIDTH)+TILE_WIDTH/2;
+						tile.y = TILE_HEIGHT*y +TILE_HEIGHT;
+						level.potions.push(tile);
+						addChild(tile);
+					}
+					else if(tiles[y][x] == 4){
+						tile = new Fantasma((x*TILE_WIDTH)+TILE_WIDTH/2,TILE_HEIGHT*(y-1) + TILE_HEIGHT,this,level);
+						level.enemies.push(tile);
+						addChild(tile);
+					}
 					/*else{
 						tile = new Tile2;
 						tile.width = TILE_WIDTH;
@@ -52,7 +64,6 @@
 					}*/
 				}
 			}
-			trace(this.height+" "+this.width);
 			this.y = -Game.SCREEN_HEIGHT-3*TILE_HEIGHT/4; 
 		}
 

@@ -64,18 +64,28 @@
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
 
 		}
+		
+		public function dispose(){
+			game.stage.removeEventListener(KeyboardEvent.KEY_DOWN,keydown);
+			game.stage.removeEventListener(KeyboardEvent.KEY_UP,keyup);
+			game.stage.removeEventListener(Event.ENTER_FRAME,update);
+		}
 
 		public function update(e:Event)
 		{
-			if (dead)
+			if (deadbar>0)
 			{
-				if (deadbar>0)
-				{
+				if(dead){
 					deadbar--;
 					level.deadBar.width = deadbar;
 				}
+				if(deadbar == 0){
+					trace("1");
+					game.levelmanager.loadLevel(new StartMenu(game));
+				}
+				
 			}
-			stage.focus = stage;
+			//stage.focus = stage;
 			if (rightkey)
 			{
 				if (vY!=0)
@@ -235,9 +245,11 @@
 				}
 				else
 				{
-					dead = true;
-					level.grey.alpha = 0.3;
-					gotoAndStop(2);
+					if(deadbar>0){
+						dead = true;
+						level.grey.alpha = 0.3;
+						gotoAndStop(2);
+					}
 				}
 			}
 		}
