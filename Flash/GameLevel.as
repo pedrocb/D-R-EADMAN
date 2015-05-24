@@ -7,6 +7,8 @@
 	import flash.display.Shape;
 	import flash.ui.Keyboard;
 	import flash.events.KeyboardEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileStream;
 
 	public class GameLevel extends Level
 	{
@@ -74,7 +76,11 @@
 					lepause();
 				}
 			}
+			if(e.keyCode == Keyboard.R){
+				game.levelmanager.loadLevel(new (Object(game.levelmanager.currentLevel).constructor)(game));
+			}
 		}
+	
 		public function update(e:Event)
 		{
 			if(player.hitTestObject(door) && player.keys == keysGUI.length){
@@ -96,7 +102,6 @@
 					}
 					deadBar.Bar.width = player.deadbar/100 * deadBar.width;
 					percentage.text = (int(player.deadbar)).toString()+"%";
-					trace(percentage.text);
 					break;
 				}
 			}

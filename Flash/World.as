@@ -2,6 +2,9 @@
 	import flash.display.MovieClip;
 	import flash.display.Loader;
 	import fl.motion.Color;
+	import flash.filesystem.File;
+	import flash.filesystem.FileStream;
+	import flash.filesystem.FileMode;
 	
 	public class World extends MovieClip{
 		var background:Array;
@@ -19,8 +22,6 @@
 			TILE_HEIGHT = 64;
 		}
 		
-
-		
 		public function load(){			
 			for(var y=0;y<background.length;y++){
 				for(var x = 0;x<background[0].length;x++){
@@ -37,8 +38,7 @@
 						tile = new Chao;
 						tile.width = TILE_WIDTH;
 						tile.height = TILE_HEIGHT;
-						tile.x = x*tile.width;
-						tile.y = tile.height*y;						
+						tile.x = x*tile.width;						tile.y = tile.height*y;						
 						addChild(tile);
 					}
 					else if(tiles[y][x] == 3){
@@ -68,6 +68,17 @@
 						tile.y = TILE_HEIGHT*y + TILE_HEIGHT;
 						level.door = tile;
 						addChild(tile);
+					}
+					else if(tiles[y][x] == 6){
+						tile = new Bat(TILE_WIDTH*x + TILE_WIDTH/2,TILE_HEIGHT*y + TILE_HEIGHT,this,level);						
+						level.enemies.push(tile);
+						addChild(tile);
+					}
+					else if(tiles[y][x] == 7){
+						tile = new Zombie((x*TILE_WIDTH)+TILE_WIDTH/2,TILE_HEIGHT*y -2 + TILE_HEIGHT,this,level);
+						level.enemies.push(tile);
+						addChild(tile);
+
 					}
 					/*else{
 						tile = new Tile2;

@@ -166,7 +166,7 @@
 			}
 			else if (this.x < Game.SCREEN_WIDTH/2 && vX <0)
 			{
-				if ( -  world.x + vX > 0)
+				if (world.x - vX < 0)
 				{
 					world.x -=  vX;
 				}
@@ -180,10 +180,9 @@
 			{
 				this.x +=  vX;
 			}
-
 			if (this.y < Game.SCREEN_HEIGHT / 2 && vY < 0)
 			{
-				if ( -  world.y + vY > 0)
+				if (world.y - vY < -3*world.TILE_HEIGHT/4)
 				{
 					world.y -=  vY;
 				}
@@ -194,7 +193,7 @@
 			}
 			else if (this.y > Game.SCREEN_HEIGHT/2 && vY >0)
 			{
-				if ( -  world.y + vY < Game.SCREEN_HEIGHT)
+				if ( world.y - vY > -Game.SCREEN_HEIGHT - 3 * world.TILE_HEIGHT / 4)
 				{
 					world.y -=  vY;
 				}
@@ -352,7 +351,7 @@
 				}
 				if (! foundright)
 				{
-					if (getTile(y,rightTileX) == 1)
+					if (getTile(y,rightTileX) == 1 || (getTile(y,rightTileX) == 5 && keys<level.keysGUI.length))
 					{
 						foundright = true;
 					}
