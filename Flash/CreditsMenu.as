@@ -2,8 +2,10 @@
 	
 	public class CreditsMenu extends Level{
 		import flash.events.MouseEvent;
+		var startlevel;
 		public function CreditsMenu(game:Game) {
 			super(game);
+
 		}
 		override public function load(){
 			var background = new Background5;

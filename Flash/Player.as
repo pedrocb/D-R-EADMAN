@@ -18,14 +18,17 @@
 		var WIDTH:Number;
 		var HEIGHT:Number;
 		var jumpspeed = 17;
+		var attacking = 0;
 
 		var vY:Number;
 		var vX:Number;
 
+		var keys = 0;
+
 		var gravity = 1;
 
 		var dead:Boolean;
-		var deadbar:int;
+		var deadbar:Number;
 
 		var canmoveright = true;
 		var canmoveleft = true;
@@ -64,8 +67,9 @@
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
 
 		}
-		
-		public function dispose(){
+
+		public function dispose()
+		{
 			game.stage.removeEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			game.stage.removeEventListener(KeyboardEvent.KEY_UP,keyup);
 			game.stage.removeEventListener(Event.ENTER_FRAME,update);
@@ -73,19 +77,30 @@
 
 		public function update(e:Event)
 		{
+			if (attacking>0)
+			{
+				attacking--;
+				if (attacking==0)
+				{
+					gotoAndStop(1);
+				}
+			}
 			if (deadbar>0)
 			{
-				if(dead){
-					deadbar--;
-					level.deadBar.width = deadbar;
+				if (dead)
+				{
+					deadbar -=  0.25;
+					level.deadBar.Bar.width = level.deadBar.width / 100 * deadbar;
+					level.percentage.text = int(deadbar).toString() + "%";
 				}
-				if(deadbar == 0){
-					trace("1");
-					game.levelmanager.loadLevel(new StartMenu(game));
+				if (deadbar == 0)
+				{
+					dead = false;
+					level.grey.alpha = 0;
+					gotoAndStop(1);
 				}
-				
+
 			}
-			//stage.focus = stage;
 			if (rightkey)
 			{
 				if (vY!=0)
@@ -94,7 +109,6 @@
 				}
 				else
 				{
-					//if(!dead)gotoAndStop(3);
 					vX = speed;
 				}
 			}
@@ -106,7 +120,6 @@
 				}
 				else
 				{
-					//if(!dead)gotoAndStop(3);
 					vX =  -  speed;
 				}
 			}
@@ -141,23 +154,25 @@
 			checkAnimations();
 			if (this.x > Game.SCREEN_WIDTH / 2 && vX > 0)
 			{
-				if(world.x-vX<(-world.tiles[0].length * world.TILE_WIDTH + Game.SCREEN_WIDTH)){
+				if (world.x-vX<(-world.tiles[0].length * world.TILE_WIDTH + Game.SCREEN_WIDTH))
+				{
 					this.x +=vX - (-world.tiles[0].length * world.TILE_WIDTH + Game.SCREEN_WIDTH  - world.x);
 					world.x = (-world.tiles[0].length * world.TILE_WIDTH) + Game.SCREEN_WIDTH;
 				}
-				else{
+				else
+				{
 					world.x -=  vX;
 				}
 			}
 			else if (this.x < Game.SCREEN_WIDTH/2 && vX <0)
 			{
-				if (-world.x + vX > 0)
+				if ( -  world.x + vX > 0)
 				{
 					world.x -=  vX;
 				}
 				else
 				{
-					this.x +=  vX +world.x;
+					this.x +=  vX + world.x;
 					world.x = 0;
 				}
 			}
@@ -172,8 +187,9 @@
 				{
 					world.y -=  vY;
 				}
-				else{
-					this.y +=vY;
+				else
+				{
+					this.y +=  vY;
 				}
 			}
 			else if (this.y > Game.SCREEN_HEIGHT/2 && vY >0)
@@ -201,17 +217,40 @@
 		{
 			if (! dead)
 			{
-				if(canmovedown){
-					gotoAndStop(4);
-				}
-				else{
-					if (vX == 0)
+				if (canmovedown)
+				{
+					if (attacking>0)
 					{
-						gotoAndStop(1);
+						gotoAndStop(5);
 					}
 					else
 					{
-						gotoAndStop(3);
+						gotoAndStop(4);
+					}
+				}
+				else
+				{
+					if (vX == 0)
+					{
+						if (attacking>0)
+						{
+							gotoAndStop(5);
+						}
+						else
+						{
+							gotoAndStop(1);
+						}
+					}
+					else
+					{
+						if (attacking>0)
+						{
+							gotoAndStop(5);
+						}
+						else
+						{
+							gotoAndStop(3);
+						}
 					}
 				}
 			}
@@ -235,7 +274,7 @@
 			{
 				upkey = true;
 			}
-			if (e.keyCode == Keyboard.CONTROL)
+			if (e.keyCode == Keyboard.Q)
 			{
 				if (dead)
 				{
@@ -245,11 +284,20 @@
 				}
 				else
 				{
-					if(deadbar>0){
+					if (deadbar>0)
+					{
 						dead = true;
 						level.grey.alpha = 0.3;
 						gotoAndStop(2);
 					}
+				}
+			}
+			if (e.keyCode == Keyboard.W)
+			{
+				if (! dead)
+				{
+					gotoAndStop(5);
+					attacking = 13;
 				}
 			}
 		}
@@ -287,7 +335,8 @@
 				leftTileX = -1;
 			}
 			var rightTileX = (int)((1+this.x-world.x+ vX+WIDTH/2)/world.TILE_WIDTH);
-			if(1+this.x+ vX+WIDTH/2>Game.SCREEN_WIDTH){
+			if (1+this.x+ vX+WIDTH/2>Game.SCREEN_WIDTH)
+			{
 				rightTileX = -1;
 			}
 			var upTileY = (int)((this.y-world.y-HEIGHT)/world.TILE_HEIGHT);
