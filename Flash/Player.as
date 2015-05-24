@@ -297,7 +297,7 @@
 				if (! dead)
 				{
 					gotoAndStop(5);
-					attacking = 13;
+					attacking = 14;
 				}
 			}
 		}

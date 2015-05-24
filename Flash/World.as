@@ -61,6 +61,14 @@
 						level.keys.push(tile);
 						addChild(tile);
 					}
+					else if(tiles[y][x]==5){
+						tile = new Door;
+						tile.gotoAndStop(2);
+						tile.x = TILE_WIDTH*x + TILE_WIDTH/2;
+						tile.y = TILE_HEIGHT*y + TILE_HEIGHT;
+						level.door = tile;
+						addChild(tile);
+					}
 					/*else{
 						tile = new Tile2;
 						tile.width = TILE_WIDTH;

@@ -22,6 +22,7 @@
 		var keysGUI:Array;
 		var keys:Array;
 		var paused:Boolean;
+		var door:MovieClip;	
 
 		public function GameLevel(game:Game)
 		{
@@ -76,6 +77,12 @@
 		}
 		public function update(e:Event)
 		{
+			if(player.hitTestObject(door) && player.keys == keysGUI.length){
+				door.gotoAndStop(2);
+			}
+			else{
+				door.gotoAndStop(1);
+			}
 			for (var i=0; i<potions.length; i++)
 			{
 				if (player.hitTestObject(potions[i]) && player.deadbar<100)
@@ -127,9 +134,10 @@
 						}
 					}
 					else{
+						if(player.attack.pa.hitTestObject(enemy)){
 						world.removeChild(enemy);
 						enemies[i] = enemies[enemies.length - 1];
-						enemies.pop();
+						enemies.pop();}
 					}
 				}
 			}
