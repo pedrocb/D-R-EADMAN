@@ -1,12 +1,14 @@
 ﻿package 
 {
 	import flash.display.Shape;
+	import flash.media.Sound;
+	import flash.net.URLRequest;
+
 	public class Level1 extends GameLevel
 	{
 		public function Level1(game:Game)
 		{
 			super(game);
-			this.WIDTH = 6 * Game.SCREEN_WIDTH;
 			world = new World(this);
 			world.tiles = [
 			   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -35,21 +37,15 @@
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 			]
 			;
-			world.background = new Array();
-			for (var y=0; y<(int)((world.tiles.length*world.TILE_HEIGHT)/Game.SCREEN_HEIGHT); y++)
-			{
-				world.background[y] = new Array  ;
-				for (var x=0; x<world.tiles[0].length*world.TILE_WIDTH/Game.SCREEN_WIDTH; x++)
-				{
-					world.background[y][x] = new Background1  ;
-				}
-			}
+			world.back = new Level1Background;
 			world.load();
 			player = new Player(400,550,game,world,this);
+			
 
 		}
 		override public function load()
 		{
+			super.load();
 			game.addChild(world);
 			game.addChild(grey);
 			var rectangle:Shape = new Shape  ;

@@ -27,10 +27,13 @@
 		var door:MovieClip;
 		
 		var pause:Pause;
+		var gameover:GameOver;
+		var levelcomplete:LevelComplete;
 
 		public function GameLevel(game:Game)
 		{
 			super(game);
+			game.channel.stop();
 			game.stage.focus = game.stage;
 			percentage = new TextField;
 			barra = new MovieClip;
@@ -65,11 +68,18 @@
 			pause = new Pause(this);
 			pause.x = Game.SCREEN_WIDTH/2 - pause.width/2;
 			pause.y = Game.SCREEN_HEIGHT/2 -pause.height/2;
-			game.stage.addEventListener(Event.ENTER_FRAME,update);
-			game.stage.addEventListener(KeyboardEvent.KEY_DOWN,checkkey);
-		}
+			gameover = new GameOver(game);
+			gameover.x = Game.SCREEN_WIDTH/2 - gameover.width/2;
+			gameover.y = Game.SCREEN_HEIGHT/2 -gameover.height/2;
+			levelcomplete = new LevelComplete(this);
+			levelcomplete.x = Game.SCREEN_WIDTH/2 - levelcomplete.width/2;
+			levelcomplete.y = Game.SCREEN_HEIGHT/2 - levelcomplete.height/2;
+					}
 		override public function load()
 		{
+			game.stage.addEventListener(Event.ENTER_FRAME,update);
+			game.stage.addEventListener(KeyboardEvent.KEY_DOWN,checkkey);
+
 		}
 		
 		public function checkkey(e:KeyboardEvent){
@@ -82,14 +92,17 @@
 				}
 			}
 			if(e.keyCode == Keyboard.R){
+				stage.frameRate = 60;
 				game.levelmanager.loadLevel(new (Object(game.levelmanager.currentLevel).constructor)(game));
 			}
 		}
 	
 		public function update(e:Event)
 		{
+			trace(stage.frameRate);
 			if(player.hitTestObject(door) && player.keys == keysGUI.length){
 				door.gotoAndStop(2);
+				completed();
 			}
 			else{
 				door.gotoAndStop(1);
@@ -135,7 +148,9 @@
 						}
 						else
 						{
-							game.levelmanager.loadLevel(new StartMenu(game));
+							game.stage.frameRate = 0;
+							end();
+							return;
 						}
 					}
 					else{
@@ -158,7 +173,19 @@
 			}
 		}
 		
+		public function completed(){
+			stage.frameRate = 0;
+			addChild(levelcomplete);
+			levelcomplete.finish();
+		}
+		
+		public function end(){
+			addChild(gameover);
+			gameover.gameover();
+		}
+		
 		public function lepause(){
+			grey.alpha = 0.3;
 			game.stage.frameRate = 0;
 			game.stage.addChild(pause);
 			pause.pause();
@@ -167,6 +194,9 @@
 		}
 		
 		public function unpause(){
+			if(!player.dead){
+				grey.alpha=0;
+			}
 			pause.removebuttons();
 			game.stage.frameRate = 60;
 			game.stage.removeChild(pause);

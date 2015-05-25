@@ -7,7 +7,7 @@
 	import flash.filesystem.FileMode;
 	
 	public class World extends MovieClip{
-		var background:Array;
+		var back:MovieClip;
 		var WIDTH:Number;
 		var HEIGHT:Number;
 		var enemies:Array;
@@ -22,15 +22,10 @@
 			TILE_HEIGHT = 64;
 		}
 		
-		public function load(){			
-			for(var y=0;y<background.length;y++){
-				for(var x = 0;x<background[0].length;x++){
-					var back:MovieClip = background[y][x];
-					back.x = x*Game.SCREEN_WIDTH;
-					back.y = y*Game.SCREEN_HEIGHT+ 3*TILE_HEIGHT/4;
-					addChild(back);
-				}
-			}
+		public function load(){
+			back.x = 0;
+			back.y = 3*TILE_HEIGHT/4;
+			addChild(back);
 			for(y=0;y<tiles.length;y++){
 				for(x=0;x<tiles[0].length;x++){
 					var tile;
@@ -92,6 +87,7 @@
 				}
 			}
 			this.y = -Game.SCREEN_HEIGHT-3*TILE_HEIGHT/4; 
+			this.x = 0;
 		}
 
 	}

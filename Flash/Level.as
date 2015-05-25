@@ -3,7 +3,6 @@
 	
 	public class Level extends MovieClip{
 		var game:Game;
-		var WIDTH:int;
 		public function Level(game:Game) {
 			this.game = game;
 		}
