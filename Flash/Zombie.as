@@ -4,7 +4,8 @@
 
 		public function Zombie(x:int,y:int,world:World,level:GameLevel) {
 			super(x,y,world,level);
-			speed = 1;
+			speed = 0.8;
+			life = 3;
 		}
 
 	}

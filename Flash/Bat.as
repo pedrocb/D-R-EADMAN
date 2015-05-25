@@ -1,12 +1,8 @@
 ﻿package  {
 	import flash.display.MovieClip;
 	import flash.events.Event;
-	public class Bat extends MovieClip{
-		var world:World;
-		var level:GameLevel;
-		var speed = 3;
-		var game;
-		
+	public class Bat extends Enemy{
+		var speed = 3;		
 		var vX,vY;
 		
 		var canmoveright = true;
@@ -14,18 +10,27 @@
 		var canmoveup = true;
 		var canmovedown = true;
 		
+		
 		public function Bat(x,y,world:World,level:GameLevel) {
 			this.x = x;
 			this.y = y;
-			this.world = world;
-			this.level = level;
-			this.game = level.game;
+			super(world,level);
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
 			rotationY = 180;
+			life = 1;
 		}
 		
 		public function update(e:Event)
 		{
+			if(blink.running){
+				this.alpha+=aux;
+				if(this.alpha>=100){
+					aux*-1;
+				}
+				if(this.alpha==0){
+					aux*-1;
+				}
+			}
 			if(!canmoveright && speed > 0){
 				speed*=-1;
 			}

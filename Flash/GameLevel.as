@@ -24,10 +24,13 @@
 		var keysGUI:Array;
 		var keys:Array;
 		var paused:Boolean;
-		var door:MovieClip;	
+		var door:MovieClip;
+		
+		var pause:Pause;
 
 		public function GameLevel(game:Game)
 		{
+			super(game);
 			game.stage.focus = game.stage;
 			percentage = new TextField;
 			barra = new MovieClip;
@@ -59,7 +62,9 @@
 			enemies = new Array  ;
 			potions = new Array  ;
 			keys = new Array;
-			super(game);
+			pause = new Pause(this);
+			pause.x = Game.SCREEN_WIDTH/2 - pause.width/2;
+			pause.y = Game.SCREEN_HEIGHT/2 -pause.height/2;
 			game.stage.addEventListener(Event.ENTER_FRAME,update);
 			game.stage.addEventListener(KeyboardEvent.KEY_DOWN,checkkey);
 		}
@@ -96,12 +101,7 @@
 					world.removeChild(potions[i]);
 					potions[i] = potions[potions.length - 1];
 					potions.pop();
-					player.deadbar +=  25;
-					if(player.deadbar >100){
-						player.deadbar = 100;
-					}
-					deadBar.Bar.width = player.deadbar/100 * deadBar.width;
-					percentage.text = (int(player.deadbar)).toString()+"%";
+					player.updatedeadbar(25);
 					break;
 				}
 			}
@@ -140,9 +140,19 @@
 					}
 					else{
 						if(player.attack.pa.hitTestObject(enemy)){
-						world.removeChild(enemy);
-						enemies[i] = enemies[enemies.length - 1];
-						enemies.pop();}
+							if(!enemy.blink.running){
+								enemy.life--;
+								if(enemy.life == 0){
+									world.removeChild(enemy);
+									enemies[i] = enemies[enemies.length - 1];
+									enemies.pop();
+									player.updatedeadbar(10);
+								}
+								else{											
+									enemy.startBlinking();
+								}
+							}
+						}
 					}
 				}
 			}
@@ -150,11 +160,16 @@
 		
 		public function lepause(){
 			game.stage.frameRate = 0;
+			game.stage.addChild(pause);
+			pause.pause();
 			paused = true;
+			
 		}
 		
 		public function unpause(){
+			pause.removebuttons();
 			game.stage.frameRate = 60;
+			game.stage.removeChild(pause);
 			paused = false;
 		}
 		

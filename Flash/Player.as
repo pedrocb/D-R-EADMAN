@@ -89,9 +89,7 @@
 			{
 				if (dead)
 				{
-					deadbar -=  0.25;
-					level.deadBar.Bar.width = level.deadBar.width / 100 * deadbar;
-					level.percentage.text = int(deadbar).toString() + "%";
+					updatedeadbar(-0.25);
 				}
 				if (deadbar == 0)
 				{
@@ -481,6 +479,15 @@
 					canmoveup = true;
 				}
 			}
+		}
+		
+		public function updatedeadbar(i:Number){
+			deadbar += i;
+			if(deadbar >100){
+				deadbar = 100;
+			}
+			level.deadBar.Bar.width = deadbar/100 * level.deadBar.width;
+			level.percentage.text = (int(deadbar)).toString()+"%";		
 		}
 
 		public function getTile(y:int,x:int):int

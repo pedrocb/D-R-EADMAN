@@ -2,11 +2,7 @@
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	
-	public class GroundEnemy extends MovieClip{
-		var world:World;
-		var game:Game;
-		var level:GameLevel;
-		
+	public class GroundEnemy extends Enemy{		
 		var canmoveright = true;
 		var canmoveleft = true;
 		var canmoveup = true;
@@ -20,9 +16,7 @@
 		public function GroundEnemy(x:int,y:int,world:World,level:GameLevel) {
 			this.x = x;
 			this.y = y;
-			this.world = world;
-			this.game = level.game;
-			this.level = level;
+			super(world,level)
 			rotationY = 0;
 			load();
 		}
@@ -48,6 +42,16 @@
 
 		public function update(e:Event)
 		{
+			if(blink.running){
+				trace("teset");
+				this.alpha+=aux;
+				if(this.alpha>=100){
+					aux*-1;
+				}
+				if(this.alpha==0){
+					aux*-1;
+				}
+			}
 			if(canmovedown){
 				if(vY>=0)
 				vY = gravity;

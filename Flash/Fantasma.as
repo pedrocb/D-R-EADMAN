@@ -7,6 +7,7 @@
 		public function Fantasma(x:int,y:int,world:World,level:GameLevel){
 			super(x,y,world,level);
 			speed = 1.5;
+			life = 2;
 		}
 	}
 	
